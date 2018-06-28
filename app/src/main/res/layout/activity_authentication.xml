@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="60dp"
+    android:paddingEnd="60dp"
+    android:background="#fff"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:src="@drawable/logo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estimada usuaria por favor ingrese sus credenciales para continuar"
+            android:layout_marginTop="40dp"
+            android:textColor="@color/colorPrimaryText"
+            android:layout_marginBottom="20dp"/>
+
+        <EditText
+            android:id="@+id/user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_primary"
+            android:hint="Usuaria..."
+            android:textSize="13sp"
+            android:maxLength="12"
+            android:textColor="@color/colorPrimaryText"
+            android:textColorHint="@color/colorPrimaryText"
+            android:layout_marginBottom="20dp"
+            android:imeOptions="actionNext"
+            android:padding="10dp"/>
+
+        <EditText
+            android:id="@+id/pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_primary"
+            android:textSize="13sp"
+            android:hint="Contraseña..."
+            android:maxLength="12"
+            android:inputType="textPassword"
+            android:textColor="@color/colorPrimaryText"
+            android:textColorHint="@color/colorPrimaryText"
+            android:imeOptions="actionDone"
+            android:padding="10dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/solid_primary"
+            android:text="Ingresar"
+            android:paddingStart="60dp"
+            android:paddingEnd="60dp"
+            android:textAllCaps="false"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:textColor="#fff"
+            android:onClick="login"/>
+
+    </LinearLayout>
+
+</LinearLayout>

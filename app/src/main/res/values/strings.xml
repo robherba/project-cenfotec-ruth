@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Social Ruth</string>
+    <string name="search_hint">Buscar...</string>
+    <string name="time_out">Estimado usuario no es posible realizar la operación por un error de comunicación.</string>
+</resources>
