@@ -1,7 +1,12 @@
 package com.rhernandez.social_ruth.adapters;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.rhernandez.social_ruth.R;
 import com.rhernandez.social_ruth.models.UserEntity;
+import com.rhernandez.social_ruth.views.UserPostActivity;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +57,56 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.PostViewHolder
         holder.user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showUserMenu(user);
             }
         });
+        loadImage(holder.photo, user.getImage());
+    }
+
+    private void showUserMenu(final UserEntity user) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.view_image_menu, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView call = dialogView.findViewById(R.id.gallery);
+        TextView posts = dialogView.findViewById(R.id.camera);
+
+        call.setText("Llamar al usuario");
+        posts.setText("Ver publicaciones");
+
+        final AlertDialog alertDialog = dialogBuilder.create();
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                if (checkSelfPermission()) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + user.getPhone()));
+                    activity.startActivity(intent);
+                }
+            }
+        });
+
+        posts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                Intent intent = new Intent(activity, UserPostActivity.class);
+                intent.putExtra("user", user);
+                activity.startActivity(intent);
+            }
+        });
+        alertDialog.setTitle("");
+        alertDialog.show();
+    }
+
+    public boolean checkSelfPermission() {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CALL_PHONE}, 0);
+            return false;
+        }
+        return true;
     }
 
     public void loadImage(ImageView view, String url) {

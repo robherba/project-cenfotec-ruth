@@ -1,6 +1,9 @@
 package com.rhernandez.social_ruth.views;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.rhernandez.social_ruth.R;
+import com.rhernandez.social_ruth.SocialRuth;
 import com.rhernandez.social_ruth.adapters.UserAdapter;
 import com.rhernandez.social_ruth.models.UserEntity;
 import com.rhernandez.social_ruth.utilities.DividerItemDecoration;
@@ -34,7 +38,7 @@ public class UsersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView list = view.findViewById(R.id.list);
-        final UserAdapter adapter = new UserAdapter(getActivity(), getUsers());
+        final UserAdapter adapter = new UserAdapter(getActivity(), SocialRuth.getInstance().getUserEntities());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(mLayoutManager);
         list.addItemDecoration(new DividerItemDecoration(getActivity()));
@@ -62,15 +66,5 @@ public class UsersFragment extends Fragment {
             }
         });
         return view;
-    }
-
-    public List<UserEntity> getUsers() {
-        List<UserEntity> users = new ArrayList<>();
-        users.add(new UserEntity("https://images.pexels.com/photos/46710/pexels-photo-46710.jpeg?auto=compress&cs=tinysrgb&h=350", "Amelia Earhart", "8923-1231", "Dios es mi guía"));
-        users.add(new UserEntity("https://images.pexels.com/photos/46710/pexels-photo-46710.jpeg?auto=compress&cs=tinysrgb&h=350", "Ana Bolena", "8923-1231", "Dios es mi guía"));
-        users.add(new UserEntity("https://images.pexels.com/photos/46710/pexels-photo-46710.jpeg?auto=compress&cs=tinysrgb&h=350", "Carlota Corday", "8923-1231", "Dios es mi guía"));
-        users.add(new UserEntity("https://images.pexels.com/photos/46710/pexels-photo-46710.jpeg?auto=compress&cs=tinysrgb&h=350", "Catalina de Aragón", "8923-1231", "Dios es mi guía"));
-        users.add(new UserEntity("https://images.pexels.com/photos/46710/pexels-photo-46710.jpeg?auto=compress&cs=tinysrgb&h=350", "Eleanor Roosevelt", "8923-1231", "Dios es mi guía"));
-        return users;
     }
 }

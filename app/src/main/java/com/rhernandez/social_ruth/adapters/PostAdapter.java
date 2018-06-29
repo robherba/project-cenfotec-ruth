@@ -2,13 +2,18 @@ package com.rhernandez.social_ruth.adapters;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import android.os.Environment;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -20,14 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rhernandez.social_ruth.R;
-import com.rhernandez.social_ruth.SocialRuth;
 import com.rhernandez.social_ruth.models.PostEntity;
 import com.rhernandez.social_ruth.views.PostDetailActivity;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -60,26 +63,34 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.body.setText(post.getTitle());
         if (post.getImage() != null) {
             loadImage(holder.image, post.getImage());
+        } else if (checkSelfPermission()) {
+            holder.image.setImageBitmap(decodeSampledBitmapFromFile(post.getPath(), 500, 500));
+        }
+        if (post.isAdd()) {
+            holder.likeBtn.setImageResource(R.mipmap.ic_like);
         } else {
-            if (test()) {
-                holder.image.setImageBitmap(decodeSampledBitmapFromFile(post.getPath(), 500, 500));
-            }
+            holder.likeBtn.setImageResource(R.mipmap.ic_dislike);
         }
         loadImage(holder.user_photo, post.getUserPhoto());
 
         holder.likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                post.setLikes(post.getLikes()+1);
+                if (post.isAdd()) {
+                    post.setAdd(false);
+                    holder.likeBtn.setImageResource(R.mipmap.ic_dislike);
+                } else {
+                    post.setAdd(true);
+                    holder.likeBtn.setImageResource(R.mipmap.ic_like);
+                }
                 holder.likes.setText(String.valueOf(post.getLikes()));
-                Toast.makeText(activity, "Likes: " + post.getLikes(), Toast.LENGTH_SHORT).show();
             }
         });
 
         holder.shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity, "Share action!", Toast.LENGTH_SHORT).show();
+                share(holder.post);
             }
         });
 
@@ -93,22 +104,45 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         });
     }
 
-    public boolean test() {
+    public boolean checkSelfPermission() {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
             return false;
-        } else {
-            return true;
+        }
+        return true;
+    }
+
+    public void share(View view) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+
+        i.setType("image/*");
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        i.putExtra(Intent.EXTRA_STREAM, getImageUri(activity, getBitmapFromView(view)));
+        try {
+            activity.startActivity(Intent.createChooser(i, "My Profile ..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ex.printStackTrace();
         }
     }
 
-    public Bitmap decodeSampledBitmapFromFile(String path, int reqWidth, int reqHeight) { // BEST QUALITY MATCH
-        //First decode with inJustDecodeBounds=true to check dimensions
+    public Bitmap getBitmapFromView(View view) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(),      view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+        return returnedBitmap;
+    }
+
+    public Bitmap decodeSampledBitmapFromFile(String path, int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
 
-        // Calculate inSampleSize, Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -125,12 +159,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         options.inSampleSize = inSampleSize;
-
-        // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
 
         Bitmap finalPicture = BitmapFactory.decodeFile(path, options);
-
         Bitmap rotatePicture = null;
         try {
             ExifInterface ei = new ExifInterface(path);
@@ -152,6 +183,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             e.printStackTrace();
         }
         return rotatePicture;
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     public Bitmap rotateImage(Bitmap bitmap, int rotation) {

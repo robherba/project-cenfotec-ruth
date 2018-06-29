@@ -6,10 +6,12 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.rhernandez.social_ruth.R;
 import com.rhernandez.social_ruth.models.PostEntity;
@@ -28,12 +30,20 @@ public class PostDetailActivity extends AppCompatActivity {
     private TextView title, description, info;
     private ImageView image;
     private Button submit;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_new_post);
         selection = (PostEntity) getIntent().getSerializableExtra("post");
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.VISIBLE);
+        setActionBar(toolbar);
+        getActionBar().setTitle(selection.getUserName());
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         initUI();
         loadSelection();
     }
@@ -43,17 +53,13 @@ public class PostDetailActivity extends AppCompatActivity {
         (findViewById(R.id.description)).setEnabled(false);
         (findViewById(R.id.info)).setVisibility(View.GONE);
         image = findViewById(R.id.image);
-        ((Button) findViewById(R.id.submit)).setText("Cerrar");
-        (findViewById(R.id.submit)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        (findViewById(R.id.submit)).setVisibility(View.GONE);
     }
 
-    public void setSelection(PostEntity selection) {
-        this.selection = selection;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return super.onOptionsItemSelected(item);
     }
 
     public void loadSelection() {
@@ -70,12 +76,9 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     public Bitmap decodeSampledBitmapFromFile(String path, int reqWidth, int reqHeight) { // BEST QUALITY MATCH
-        //First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
-
-        // Calculate inSampleSize, Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -90,14 +93,9 @@ public class PostDetailActivity extends AppCompatActivity {
             if (Math.round((float) width / (float) reqWidth) > inSampleSize) // If bigger SampSize..
                 inSampleSize = Math.round((float) width / (float) reqWidth);
         }
-
         options.inSampleSize = inSampleSize;
-
-        // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-
         Bitmap finalPicture = BitmapFactory.decodeFile(path, options);
-
         Bitmap rotatePicture = null;
         try {
             ExifInterface ei = new ExifInterface(path);

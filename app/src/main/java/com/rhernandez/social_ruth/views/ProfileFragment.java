@@ -65,8 +65,50 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UserPostActivity.class);
+                UserEntity user = new UserEntity();
+                user.setName(SocialRuth.getInstance().getValue("name"));
+                user.setPhone(SocialRuth.getInstance().getValue("phone"));
+                user.setState(SocialRuth.getInstance().getValue("state"));
+                intent.putExtra("user", user);
                 getActivity().startActivity(intent);
             }
         });
+
+        (view.findViewById(R.id.loguot)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+    }
+
+    public void logout() {
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(getActivity());
+        View dialogView = getActivity().getLayoutInflater().inflate(R.layout.view_comfirmatio, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView confirm = dialogView.findViewById(R.id.confirm);
+        TextView cancel = dialogView.findViewById(R.id.cancel);
+
+        final android.app.AlertDialog alertDialog = dialogBuilder.create();
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                SocialRuth.getInstance().removeData("login");
+                Intent intent = new Intent(getActivity(), AuthenticationActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.setTitle("");
+        alertDialog.show();
     }
 }

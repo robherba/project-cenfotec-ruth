@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_photo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="10dp"
         android:scaleType="centerCrop"
         android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/logo"/>
+        android:layout_marginBottom="35dp"
+        android:src="@drawable/profile"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -50,7 +51,9 @@
             android:background="@drawable/border_primary"
             android:hint="Escribe aqui tu número telefónico..."
             android:textSize="13sp"
-            android:maxLength="25"
+            android:maxLength="8"
+            android:inputType="number"
+            android:digits="0123456789"
             android:singleLine="true"
             android:textColor="@color/colorPrimaryText"
             android:textColorHint="@color/colorPrimaryText"
@@ -65,7 +68,7 @@
             android:background="@drawable/border_primary"
             android:hint="Escribe aqui tu estado..."
             android:textSize="13sp"
-            android:maxLength="25"
+            android:maxLength="100"
             android:singleLine="true"
             android:textColor="@color/colorPrimaryText"
             android:textColorHint="@color/colorPrimaryText"
@@ -73,18 +76,31 @@
             android:imeOptions="actionNext"
             android:padding="10dp"/>
 
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/solid_primary"
+            android:text="Actualizar"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:textSize="12dp"
+            android:textAllCaps="false"
+            android:layout_gravity="center"
+            android:textColor="#fff"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/submit"
-                android:layout_width="0dp"
+                android:id="@+id/loguot"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@drawable/solid_primary"
-                android:text="Actualizar Datos"
+                android:text="Cerrar sesión"
                 android:paddingStart="40dp"
                 android:paddingEnd="40dp"
                 android:textSize="12dp"
@@ -100,7 +116,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/solid_primary"
                 android:layout_marginStart="8dp"
-                android:text="Publicaciones"
+                android:text="Entradas"
                 android:textSize="12dp"
                 android:paddingStart="40dp"
                 android:paddingEnd="40dp"

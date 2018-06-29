@@ -35,6 +35,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/border_primary"
             android:hint="Usuaria..."
+            android:singleLine="true"
             android:textSize="13sp"
             android:maxLength="12"
             android:textColor="@color/colorPrimaryText"

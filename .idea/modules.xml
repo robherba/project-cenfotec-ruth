@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/social_ruth.iml" filepath="$PROJECT_DIR$/social_ruth.iml" />
+      <module fileurl="file://C:\dev\project-cenfotec-ruth\app\app.iml" filepath="C:\dev\project-cenfotec-ruth\app\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project-cenfotec-ruth.iml" filepath="$PROJECT_DIR$/project-cenfotec-ruth.iml" />
+      <module fileurl="file://C:\dev\project-cenfotec-ruth\social_ruth.iml" filepath="C:\dev\project-cenfotec-ruth\social_ruth.iml" />
     </modules>
   </component>
 </project>

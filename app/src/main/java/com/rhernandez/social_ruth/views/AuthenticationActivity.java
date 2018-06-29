@@ -1,6 +1,5 @@
 package com.rhernandez.social_ruth.views;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.rhernandez.social_ruth.R;
+import com.rhernandez.social_ruth.SocialRuth;
 import com.rhernandez.social_ruth.models.RequestAuthenticate;
 import com.rhernandez.social_ruth.models.ResponseAuth;
 import com.rhernandez.social_ruth.utilities.NetworkAPI;
@@ -31,6 +31,11 @@ public class AuthenticationActivity extends AppCompatActivity {
         getWindow().setNavigationBarColor(getResources().getColor(R.color.white));
         user = findViewById(R.id.user);
         pass = findViewById(R.id.pass);
+
+        if (SocialRuth.getInstance().getValue("login") != null) {
+            Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     public boolean validateFields() {
@@ -60,6 +65,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         authenticateCall.enqueue(new Callback<ResponseAuth>() {
             @Override
             public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
+                SocialRuth.getInstance().saveData("login", user.getText().toString());
                 ResponseAuth responseAuth = response.body();
                 if (responseAuth.isSuccessful()) {
                     progress.dismiss();

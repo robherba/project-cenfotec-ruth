@@ -8,9 +8,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.rhernandez.social_ruth.R;
 import com.rhernandez.social_ruth.adapters.TabAdapter;
+import com.rhernandez.social_ruth.models.UserEntity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,23 +52,40 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void goToHome() {
+        viewPager.setCurrentItem(0);
+    }
+
     public static MainActivity getInstance() {
         return instance;
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        new AlertDialog.Builder(this)
-            .setTitle("Confirmar")
-            .setMessage("¿Está segura que desea salir de Social Ruth?")
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    finish();
-                }})
-            .setNegativeButton("Cancelar", null)
-            .show();
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.view_comfirmatio, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView confirm = dialogView.findViewById(R.id.confirm);
+        TextView cancel = dialogView.findViewById(R.id.cancel);
+
+        final android.app.AlertDialog alertDialog = dialogBuilder.create();
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                finish();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.setTitle("");
+        alertDialog.show();
     }
 
     public void setImageMenu(ImageMenu imageMenu) {

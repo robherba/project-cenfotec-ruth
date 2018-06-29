@@ -16,6 +16,7 @@ public class PostEntity implements Serializable {
     private String title;
     private String description;
     private int likes;
+    private boolean add;
 
     public PostEntity() {
     }
@@ -91,5 +92,14 @@ public class PostEntity implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public boolean isAdd() {
+        return add;
+    }
+
+    public void setAdd(boolean add) {
+        this.add = add;
+        likes = add ? likes + 1 : likes - 1;
     }
 }

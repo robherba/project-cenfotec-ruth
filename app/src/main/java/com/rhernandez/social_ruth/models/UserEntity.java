@@ -1,10 +1,12 @@
 package com.rhernandez.social_ruth.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Roberto Hernandez on 6/27/2018.
  */
 
-public class UserEntity {
+public class UserEntity implements Serializable {
     private String image;
     private String name;
     private String phone;
